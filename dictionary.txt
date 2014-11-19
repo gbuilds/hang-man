@@ -1,0 +1,10 @@
+hello
+word
+test
+this
+dictionary
+is
+short
+gordie
+ruby
+code
