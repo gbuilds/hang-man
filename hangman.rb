@@ -1,3 +1,5 @@
+require 'yaml'
+
 class Game
   attr_accessor :name, :playing, :lives
   
@@ -5,6 +7,11 @@ class Game
     @name = name
     @playing = true
     @lives = 9
+    @dictionary = load_dictionary
+    @word = get_random_word(@dictionary)
+    @letters = @word.split("")
+    @matched_letters = Array.new(@word.length, "_")
+    @guessed = []
   end
   
   def load_dictionary
@@ -20,31 +27,25 @@ class Game
     random_word = random_word.downcase
   end
   
-  def play
-    dictionary = load_dictionary
-    word = get_random_word(dictionary)
-    letters = word.split("")
-    matched_letters = Array.new(word.length, "_")
-    guessed = []
-    
+  def play   
     while @playing == true
-      puts guessed.join(", ") unless guessed.empty?
-      puts matched_letters.join(" ")
+      puts "Guessed: " + @guessed.join(", ") unless @guessed.empty?
+      puts @matched_letters.join(" ")
       puts "#{lives} lives. What is your guess?"
       guess = gets.chomp
-      guessed << guess
+      @guessed << guess
       hit = false
-      letters.each_with_index do |letter, index|
+      @letters.each_with_index do |letter, index|
         if letter == guess
-          matched_letters[index] = letter
+          @matched_letters[index] = letter
           hit = true
         end
       end
       @lives -= 1 if hit == false
-      @playing = false if matched_letters == letters
+      @playing = false if @matched_letters == @letters
       @playing = false if @lives == 0
     end
-    puts word
+    puts @word
   end
   
 end
@@ -58,6 +59,7 @@ end
 # if hit, add letters to word
 # check if all letters are matched
 # loop until dead or until all letters are matched and declare winner
+# when you elect to save game you need to save: name, random_word, guesses, matched_letters, lives_remaining
 
 mygame = Game.new("Gordie")
 mygame.play
